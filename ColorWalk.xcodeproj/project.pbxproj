@@ -17,6 +17,9 @@
 		ACF30CA32F224D910040C318 /* ColorWalkUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CA22F224D910040C318 /* ColorWalkUITestsLaunchTests.swift */; };
 		ACF30CB02F224DB50040C318 /* PhotoPickingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CAF2F224DB50040C318 /* PhotoPickingView.swift */; };
 		ACF30CB22F225B400040C318 /* PhotoPickingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CB12F225B400040C318 /* PhotoPickingViewModel.swift */; };
+		ACF30CB82F27AE2F0040C318 /* TodayPhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CB72F27AE2F0040C318 /* TodayPhotoPickerView.swift */; };
+		ACF30CBA2F27B0510040C318 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CB92F27B0510040C318 /* AssetManager.swift */; };
+		ACF30CBC2F27B09D0040C318 /* AssetThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CBB2F27B09D0040C318 /* AssetThumbnail.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +53,9 @@
 		ACF30CA22F224D910040C318 /* ColorWalkUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorWalkUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		ACF30CAF2F224DB50040C318 /* PhotoPickingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickingView.swift; sourceTree = "<group>"; };
 		ACF30CB12F225B400040C318 /* PhotoPickingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickingViewModel.swift; sourceTree = "<group>"; };
+		ACF30CB72F27AE2F0040C318 /* TodayPhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayPhotoPickerView.swift; sourceTree = "<group>"; };
+		ACF30CB92F27B0510040C318 /* AssetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetManager.swift; sourceTree = "<group>"; };
+		ACF30CBB2F27B09D0040C318 /* AssetThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetThumbnail.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,9 @@
 				ACF30C852F224D900040C318 /* ContentView.swift */,
 				ACF30CAF2F224DB50040C318 /* PhotoPickingView.swift */,
 				ACF30CB12F225B400040C318 /* PhotoPickingViewModel.swift */,
+				ACF30CB72F27AE2F0040C318 /* TodayPhotoPickerView.swift */,
+				ACF30CB92F27B0510040C318 /* AssetManager.swift */,
+				ACF30CBB2F27B09D0040C318 /* AssetThumbnail.swift */,
 				ACF30C872F224D900040C318 /* Item.swift */,
 				ACF30C892F224D910040C318 /* Assets.xcassets */,
 				ACF30C8B2F224D910040C318 /* Preview Content */,
@@ -266,10 +275,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ACF30CB82F27AE2F0040C318 /* TodayPhotoPickerView.swift in Sources */,
 				ACF30C862F224D900040C318 /* ContentView.swift in Sources */,
 				ACF30CB22F225B400040C318 /* PhotoPickingViewModel.swift in Sources */,
 				ACF30C882F224D900040C318 /* Item.swift in Sources */,
 				ACF30C842F224D900040C318 /* ColorWalkApp.swift in Sources */,
+				ACF30CBC2F27B09D0040C318 /* AssetThumbnail.swift in Sources */,
+				ACF30CBA2F27B0510040C318 /* AssetManager.swift in Sources */,
 				ACF30CB02F224DB50040C318 /* PhotoPickingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,6 +449,10 @@
 				DEVELOPMENT_TEAM = 893UA9XLV2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "需要使用相機拍攝 Color Walk 過程的照片。";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "我們需要讀取步數數據以連結您的散步紀錄。";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "我們將記錄您的行走軌跡以生成色彩地圖。";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "我們需要存取相簿以讀取照片及其位置資訊。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -466,6 +482,10 @@
 				DEVELOPMENT_TEAM = 893UA9XLV2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "需要使用相機拍攝 Color Walk 過程的照片。";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "我們需要讀取步數數據以連結您的散步紀錄。";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "我們將記錄您的行走軌跡以生成色彩地圖。";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "我們需要存取相簿以讀取照片及其位置資訊。";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

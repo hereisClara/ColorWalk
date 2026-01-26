@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  ColorWalk
 //
-//  Created by 小妍寶 on 2026/1/22.
+//  Created by Clara on 2026/1/22.
 //
 
 import SwiftUI
