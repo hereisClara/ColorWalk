@@ -2,7 +2,7 @@
 //  PhotoPickingView.swift
 //  ColorWalk
 //
-//  Created by 小妍寶 on 2026/1/22.
+//  Created by Clara on 2026/1/22.
 //
 
 import Foundation
@@ -27,12 +27,12 @@ struct PhotoPickingView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if viewModel.images.isEmpty {
+                if viewModel.walkPhotos.isEmpty {
                     ContentUnavailableView("打造拼圖", systemImage: "square.grid.2x2", description: Text("選取至少兩張照片"))
                 } else {
                     LazyVGrid(columns: columns, spacing: 2) {
-                        ForEach(0..<viewModel.images.count, id: \.self) { index in
-                            Image(uiImage: viewModel.images[index])
+                        ForEach(viewModel.walkPhotos) { photo in
+                            Image(uiImage: photo.image)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(minWidth: 0, maxWidth: .infinity)
@@ -46,25 +46,23 @@ struct PhotoPickingView: View {
                     
                 }
                 
-                Spacer()
-                
-                PhotosPicker(
-                    selection: $viewModel.selectedItems,
-                    maxSelectionCount: 9,
-                    matching: .images,
-                    label: {
-                        Label("選取照片", systemImage: "photo.stack")
-                            .font(.headline)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                            .padding()
-                    }
-                )
             }
             .navigationTitle("相片拼圖")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        viewModel.isShowingPicker = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $viewModel.isShowingPicker) {
+                TodayPickerView { selectedAssets in
+                    // 當使用者在 Picker 點選「完成」時，會執行這段
+                    viewModel.handleSelectedAssets(selectedAssets)
+                }
+            }
         }
     }
 }

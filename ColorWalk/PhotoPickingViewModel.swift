@@ -2,7 +2,7 @@
 //  PhotoPickingViewModel.swift
 //  ColorWalk
 //
-//  Created by 小妍寶 on 2026/1/22.
+//  Created by Clara on 2026/1/22.
 //
 
 import Foundation
@@ -12,36 +12,42 @@ import SwiftData
 
 @MainActor
 class PhotoPickingViewModel: ObservableObject {
-    
+    @Published var walkPhotos: [WalkPhoto] = []
+    @Published var isShowingPicker = false
     var modelContext: ModelContext
     
-    var selectedItems: [PhotosPickerItem] = [] {
-        didSet { loadImages() }
-    }
-    var images: [UIImage] = []
-    @Published var isLoading = false
+    init(modelContext: ModelContext) {
+           self.modelContext = modelContext
+       }
     
-    init(modelContext: ModelContext, selectedItems: [PhotosPickerItem] = [], images: [UIImage] = [], isLoading: Bool = false) {
-        self.modelContext = modelContext
-        self.selectedItems = selectedItems
-        self.images = images
-        self.isLoading = isLoading
-    }
-    
-    private func loadImages() {
-        Task {
-            isLoading = true
-            var loadedImages: [UIImage] = []
+    func handleSelectedAssets(_ assets: [PHAsset]) {
+        let manager = PHImageManager.default()
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true
+        options.deliveryMode = .highQualityFormat
+
+        for asset in assets {
+            let location = asset.location
+            let date = asset.creationDate
             
-            for item in selectedItems {
-                if let data = try? await item.loadTransferable(type: Data.self),
-                   let uiImage = UIImage(data: data) {
-                    loadedImages.append(uiImage)
+            manager.requestImage(for: asset,
+                                 targetSize: CGSize(width: 1080, height: 1080),
+                                 contentMode: .aspectFill,
+                                 options: options) { [weak self] image, _ in
+                if let uiImage = image {
+                    let newPhoto = WalkPhoto(image: uiImage, location: location, date: date)
+                    DispatchQueue.main.async {
+                        self?.walkPhotos.append(newPhoto)
+                    }
                 }
             }
-            
-            self.images = loadedImages
-            isLoading = false
         }
     }
+}
+
+struct WalkPhoto: Identifiable {
+    let id = UUID()
+    let image: UIImage
+    let location: CLLocation?
+    let date: Date?
 }
