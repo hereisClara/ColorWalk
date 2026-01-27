@@ -35,13 +35,25 @@ class PhotoPickingViewModel: ObservableObject {
                                  contentMode: .aspectFill,
                                  options: options) { [weak self] image, _ in
                 if let uiImage = image {
-                    let newPhoto = WalkPhoto(image: uiImage, location: location, date: date)
+                    let newPhoto = WalkPhoto(image: uiImage, location: location, date: date, colorScore: 0)
                     DispatchQueue.main.async {
                         self?.walkPhotos.append(newPhoto)
                     }
                 }
             }
         }
+    }
+    
+    func addCameraPhoto(image: UIImage, score: Double, location: CLLocation?) {
+        
+        let newPhoto = WalkPhoto(
+            image: image,
+            location: location,
+            date: Date(),
+            colorScore: score
+        )
+        
+        self.walkPhotos.append(newPhoto)
     }
 }
 
@@ -50,4 +62,5 @@ struct WalkPhoto: Identifiable {
     let image: UIImage
     let location: CLLocation?
     let date: Date?
+    let colorScore: Double?
 }

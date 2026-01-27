@@ -14,6 +14,7 @@ struct PhotoPickingView: View {
     
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel: PhotoPickingViewModel
+    @State private var showCamera = false
     
     init(modelContext: ModelContext) {
         _viewModel = StateObject(wrappedValue: PhotoPickingViewModel(modelContext: modelContext))
@@ -59,8 +60,23 @@ struct PhotoPickingView: View {
             }
             .sheet(isPresented: $viewModel.isShowingPicker) {
                 TodayPickerView { selectedAssets in
-                    // 當使用者在 Picker 點選「完成」時，會執行這段
                     viewModel.handleSelectedAssets(selectedAssets)
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { showCamera = true }) {
+                        Image(systemName: "camera.fill")
+                    }
+                }
+            }
+            .fullScreenCover(isPresented: $showCamera) {
+                ColorCameraView { capturedImage, score in
+                    viewModel.addCameraPhoto(
+                        image: capturedImage,
+                        score: score,
+                        location: nil
+                    )
                 }
             }
         }
