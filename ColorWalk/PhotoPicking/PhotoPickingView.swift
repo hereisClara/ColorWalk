@@ -33,12 +33,7 @@ struct PhotoPickingView: View {
                 } else {
                     LazyVGrid(columns: columns, spacing: 2) {
                         ForEach(viewModel.walkPhotos) { photo in
-                            Image(uiImage: photo.image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .frame(height: 150)
-                                .clipped()
+                            ImageGridCell(image: photo)
                         }
                     }
                     .background(Color.white)

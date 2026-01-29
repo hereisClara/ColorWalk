@@ -20,6 +20,11 @@
 		ACF30CB82F27AE2F0040C318 /* TodayPhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CB72F27AE2F0040C318 /* TodayPhotoPickerView.swift */; };
 		ACF30CBA2F27B0510040C318 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CB92F27B0510040C318 /* AssetManager.swift */; };
 		ACF30CBC2F27B09D0040C318 /* AssetThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CBB2F27B09D0040C318 /* AssetThumbnail.swift */; };
+		ACF30CBE2F28FD950040C318 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CBD2F28FD950040C318 /* CameraManager.swift */; };
+		ACF30CC02F2900C80040C318 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CBF2F2900C80040C318 /* CameraPreview.swift */; };
+		ACF30CC22F2900F70040C318 /* ColorCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CC12F2900F70040C318 /* ColorCameraView.swift */; };
+		ACF30CC82F2A54310040C318 /* ImageGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CC72F2A54310040C318 /* ImageGridCell.swift */; };
+		ACF30CCA2F2A576F0040C318 /* GridCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF30CC92F2A576F0040C318 /* GridCalculator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +61,11 @@
 		ACF30CB72F27AE2F0040C318 /* TodayPhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayPhotoPickerView.swift; sourceTree = "<group>"; };
 		ACF30CB92F27B0510040C318 /* AssetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetManager.swift; sourceTree = "<group>"; };
 		ACF30CBB2F27B09D0040C318 /* AssetThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetThumbnail.swift; sourceTree = "<group>"; };
+		ACF30CBD2F28FD950040C318 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		ACF30CBF2F2900C80040C318 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		ACF30CC12F2900F70040C318 /* ColorCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCameraView.swift; sourceTree = "<group>"; };
+		ACF30CC72F2A54310040C318 /* ImageGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridCell.swift; sourceTree = "<group>"; };
+		ACF30CC92F2A576F0040C318 /* GridCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCalculator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,12 +118,12 @@
 			children = (
 				ACF30C832F224D900040C318 /* ColorWalkApp.swift */,
 				ACF30C852F224D900040C318 /* ContentView.swift */,
-				ACF30CAF2F224DB50040C318 /* PhotoPickingView.swift */,
-				ACF30CB12F225B400040C318 /* PhotoPickingViewModel.swift */,
-				ACF30CB72F27AE2F0040C318 /* TodayPhotoPickerView.swift */,
-				ACF30CB92F27B0510040C318 /* AssetManager.swift */,
-				ACF30CBB2F27B09D0040C318 /* AssetThumbnail.swift */,
-				ACF30C872F224D900040C318 /* Item.swift */,
+				ACF30CC72F2A54310040C318 /* ImageGridCell.swift */,
+				ACF30CC92F2A576F0040C318 /* GridCalculator.swift */,
+				ACF30CC52F2906EE0040C318 /* PhotoPicking */,
+				ACF30CC42F2906D80040C318 /* PhotoPicker */,
+				ACF30CC32F2906C50040C318 /* Camera */,
+				ACF30CC62F2907050040C318 /* Model */,
 				ACF30C892F224D910040C318 /* Assets.xcassets */,
 				ACF30C8B2F224D910040C318 /* Preview Content */,
 			);
@@ -143,6 +153,43 @@
 				ACF30CA22F224D910040C318 /* ColorWalkUITestsLaunchTests.swift */,
 			);
 			path = ColorWalkUITests;
+			sourceTree = "<group>";
+		};
+		ACF30CC32F2906C50040C318 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				ACF30CC12F2900F70040C318 /* ColorCameraView.swift */,
+				ACF30CBD2F28FD950040C318 /* CameraManager.swift */,
+				ACF30CBF2F2900C80040C318 /* CameraPreview.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		ACF30CC42F2906D80040C318 /* PhotoPicker */ = {
+			isa = PBXGroup;
+			children = (
+				ACF30CB92F27B0510040C318 /* AssetManager.swift */,
+				ACF30CBB2F27B09D0040C318 /* AssetThumbnail.swift */,
+				ACF30CB72F27AE2F0040C318 /* TodayPhotoPickerView.swift */,
+			);
+			path = PhotoPicker;
+			sourceTree = "<group>";
+		};
+		ACF30CC52F2906EE0040C318 /* PhotoPicking */ = {
+			isa = PBXGroup;
+			children = (
+				ACF30CB12F225B400040C318 /* PhotoPickingViewModel.swift */,
+				ACF30CAF2F224DB50040C318 /* PhotoPickingView.swift */,
+			);
+			path = PhotoPicking;
+			sourceTree = "<group>";
+		};
+		ACF30CC62F2907050040C318 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				ACF30C872F224D900040C318 /* Item.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,9 +326,14 @@
 				ACF30C862F224D900040C318 /* ContentView.swift in Sources */,
 				ACF30CB22F225B400040C318 /* PhotoPickingViewModel.swift in Sources */,
 				ACF30C882F224D900040C318 /* Item.swift in Sources */,
+				ACF30CCA2F2A576F0040C318 /* GridCalculator.swift in Sources */,
 				ACF30C842F224D900040C318 /* ColorWalkApp.swift in Sources */,
+				ACF30CC02F2900C80040C318 /* CameraPreview.swift in Sources */,
+				ACF30CC22F2900F70040C318 /* ColorCameraView.swift in Sources */,
 				ACF30CBC2F27B09D0040C318 /* AssetThumbnail.swift in Sources */,
 				ACF30CBA2F27B0510040C318 /* AssetManager.swift in Sources */,
+				ACF30CBE2F28FD950040C318 /* CameraManager.swift in Sources */,
+				ACF30CC82F2A54310040C318 /* ImageGridCell.swift in Sources */,
 				ACF30CB02F224DB50040C318 /* PhotoPickingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
