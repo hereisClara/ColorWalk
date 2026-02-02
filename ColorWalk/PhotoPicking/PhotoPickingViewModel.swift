@@ -14,18 +14,20 @@ import SwiftData
 class PhotoPickingViewModel: ObservableObject {
     @Published var walkPhotos: [WalkPhoto] = []
     @Published var isShowingPicker = false
+    @Published var currentPattern: LayoutPattern = .grid
+    @Published var targetSlotCount: Int = 4
     var modelContext: ModelContext
     
     init(modelContext: ModelContext) {
-           self.modelContext = modelContext
-       }
+        self.modelContext = modelContext
+    }
     
     func handleSelectedAssets(_ assets: [PHAsset]) {
         let manager = PHImageManager.default()
         let options = PHImageRequestOptions()
         options.isNetworkAccessAllowed = true
         options.deliveryMode = .highQualityFormat
-
+        
         for asset in assets {
             let location = asset.location
             let date = asset.creationDate
@@ -35,12 +37,45 @@ class PhotoPickingViewModel: ObservableObject {
                                  contentMode: .aspectFill,
                                  options: options) { [weak self] image, _ in
                 if let uiImage = image {
-                    let newPhoto = WalkPhoto(image: uiImage, location: location, date: date)
+                    let newPhoto = WalkPhoto(image: uiImage, location: location, date: date, colorScore: 0)
                     DispatchQueue.main.async {
                         self?.walkPhotos.append(newPhoto)
                     }
                 }
             }
+        }
+    }
+    
+    func addCameraPhoto(image: UIImage, score: Double, location: CLLocation?) {
+        
+        let newPhoto = WalkPhoto(
+            image: image,
+            location: location,
+            date: Date(),
+            colorScore: score
+        )
+        
+        self.walkPhotos.append(newPhoto)
+    }
+    
+    func setLayout(_ count: Int, _ pattern: LayoutPattern) {
+        self.targetSlotCount = count
+        self.currentPattern = pattern
+        
+    }
+    
+    func switchNextLayout() {
+        let count = walkPhotos.count
+        
+        switch count {
+        case 2:
+            currentPattern = (currentPattern == .horizontal) ? .verticle : .horizontal
+        case 3:
+            currentPattern = (currentPattern == .horizontal) ? .verticle : .horizontal
+        case 4, 6:
+            currentPattern = .grid
+        default:
+            currentPattern = .grid
         }
     }
 }
@@ -50,4 +85,5 @@ struct WalkPhoto: Identifiable {
     let image: UIImage
     let location: CLLocation?
     let date: Date?
+    let colorScore: Double?
 }
