@@ -28,20 +28,34 @@ struct PhotoPickingView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                if viewModel.walkPhotos.isEmpty {
-                    ContentUnavailableView("打造拼圖", systemImage: "square.grid.2x2", description: Text("選取至少兩張照片"))
-                } else {
-                    LazyVGrid(columns: columns, spacing: 2) {
-                        ForEach(viewModel.walkPhotos) { photo in
-                            ImageGridCell(image: photo)
-                        }
+                Picker("選擇版面", selection: $viewModel.targetSlotCount) {
+                    Text("2格").tag(2)
+                    Text("3格").tag(3)
+                    Text("4格").tag(4)
+                    Text("6格").tag(6)
+                }
+                .pickerStyle(.segmented)
+                .padding()
+                .onChange(of: viewModel.targetSlotCount) { oldCount, newCount in
+                    if newCount == 2 || newCount == 3 {
+                        viewModel.currentPattern = .horizontal
+                    } else {
+                        viewModel.currentPattern = .grid
                     }
-                    .background(Color.white)
-                    .border(Color.white, width: 2)
-                    .padding()
-                    
                 }
                 
+                Spacer()
+                PuzzleContainerView(
+                    items: viewModel.walkPhotos,
+                    targetCount: viewModel.targetSlotCount,
+                    pattern: viewModel.currentPattern
+                ) { photo in
+                    ImageGridCell(image: photo)
+                }
+                .aspectRatio(1, contentMode: .fit) 
+                .padding()
+                
+                Spacer()
             }
             .navigationTitle("相片拼圖")
             .toolbar {
