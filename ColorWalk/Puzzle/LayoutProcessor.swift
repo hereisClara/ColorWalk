@@ -48,9 +48,9 @@ struct LayoutProcessor {
                       CGRect(x: cw, y: ch, width: cw, height: ch)]
             
         case (6, _):
-            let cw = w / 3, ch = h / 2
-            for r in 0..<2 {
-                for c in 0..<3 {
+            let cw = w / 2, ch = h / 3
+            for r in 0..<3 {
+                for c in 0..<2 {
                     frames.append(CGRect(x: CGFloat(c) * cw, y: CGFloat(r) * ch, width: cw, height: ch))
                 }
             }

@@ -34,7 +34,7 @@ struct PhotoPickingView: View {
                     Text("4格").tag(4)
                     Text("6格").tag(6)
                 }
-                .pickerStyle(.segmented)
+                .pickerStyle(.menu)
                 .padding()
                 .onChange(of: viewModel.targetSlotCount) { oldCount, newCount in
                     if newCount == 2 || newCount == 3 {
@@ -52,10 +52,9 @@ struct PhotoPickingView: View {
                 ) { photo in
                     ImageGridCell(image: photo)
                 }
-                .aspectRatio(1, contentMode: .fit) 
-                .padding()
+//                .padding()
                 
-                Spacer()
+//                Spacer()
             }
             .navigationTitle("相片拼圖")
             .toolbar {
