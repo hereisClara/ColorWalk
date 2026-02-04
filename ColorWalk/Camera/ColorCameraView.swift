@@ -15,13 +15,30 @@ struct ColorCameraView: View {
     
     @State private var currentZoom: CGFloat = 1.0
     @State private var lastZoom: CGFloat = 1.0
+    
+    @State private var focusPoint: CGPoint = .zero
+    @State private var isShowingFocusBox = false
+    
     var onCapture: (UIImage, Double) -> Void
     
     var body: some View {
         ZStack {
             CameraPreview(session: camera.session)
                 .ignoresSafeArea()
-                .gesture(
+                .onTapGesture { location in
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        self.focusPoint = location
+                        self.isShowingFocusBox = true
+                    }
+                    let screenSize = UIScreen.main.bounds.size
+                    let x = location.y / screenSize.height
+                    let y = 1.0 - (location.x / screenSize.width)
+                    let focusPoint = CGPoint(x: x, y: y)
+                    
+                    camera.focus(at: focusPoint)
+                    
+                }
+                .simultaneousGesture(
                     MagnificationGesture()
                         .onChanged { value in
                             let delta = value / 1.0
@@ -34,6 +51,19 @@ struct ColorCameraView: View {
                         }
                 )
             
+            if isShowingFocusBox {
+                Circle()
+                    .stroke(Color.yellow, lineWidth: 2)
+                    .frame(width: 70, height: 70)
+                    .position(focusPoint)
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            withAnimation(.easeInOut(duration: 0.5)) {
+                                isShowingFocusBox = false
+                            }
+                        }
+                    }
+            }
             VStack {
                 HStack {
                     Button(action: { dismiss() }) {
@@ -47,24 +77,6 @@ struct ColorCameraView: View {
                 
                 Spacer()
                 
-                VStack(spacing: 10) {
-                    Text("藍色相符度")
-                        .font(.caption)
-                        .bold()
-                    
-                    Text("\(Int(score * 100))%")
-                        .font(.system(size: 50, weight: .black, design: .rounded))
-                    
-                    ProgressView(value: score)
-                        .accentColor(.blue)
-                        .padding(.horizontal, 50)
-                }
-                .padding()
-                .background(Color.black.opacity(0.6))
-                .foregroundColor(.white)
-                .cornerRadius(20)
-                .padding(.bottom, 50)
-                
                 HStack {
                     Spacer()
                     
@@ -73,11 +85,24 @@ struct ColorCameraView: View {
                     }) {
                         ZStack {
                             Circle()
-                                .fill(Color.white)
-                                .frame(width: 70, height: 70)
-                            Circle()
                                 .stroke(Color.white, lineWidth: 3)
-                                .frame(width: 80, height: 80)
+                                .frame(width: 85, height: 85)
+                            
+                            Circle()
+                                .fill(Color.black.opacity(0.3))
+                                .frame(width: 72, height: 72)
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.white.opacity(0.8), lineWidth: 1)
+                                )
+                            
+                            VStack(spacing: 0) {
+                                Text("\(Int(score * 100))")
+                                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                                Text("%")
+                                    .font(.system(size: 10, weight: .semibold))
+                            }
+                            .foregroundColor(.white)
                         }
                     }
                     

@@ -57,8 +57,8 @@ class CameraManager: NSObject, ObservableObject {
         if session.canAddInput(input) { session.addInput(input) }
         
         if session.canAddOutput(photoOutput) {
-                    session.addOutput(photoOutput)
-                }
+            session.addOutput(photoOutput)
+        }
         
         videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
         if session.canAddOutput(videoOutput) { session.addOutput(videoOutput) }
@@ -71,26 +71,49 @@ class CameraManager: NSObject, ObservableObject {
     }
     
     func takePhoto() {
-            let settings = AVCapturePhotoSettings()
-            photoOutput.capturePhoto(with: settings, delegate: self)
+        let settings = AVCapturePhotoSettings()
+        photoOutput.capturePhoto(with: settings, delegate: self)
+    }
+    
+    func focus(at devicePoint: CGPoint) {
+        guard let device = AVCaptureDevice.default(for: .video) else { return }
+        
+        do {
+            try device.lockForConfiguration()
+            
+            if device.isFocusPointOfInterestSupported && device.isFocusModeSupported(.continuousAutoFocus) {
+                device.focusPointOfInterest = devicePoint
+                device.focusMode = .continuousAutoFocus
+            }
+            
+            if device.isExposurePointOfInterestSupported && device.isExposureModeSupported(.continuousAutoExposure) {
+                device.exposurePointOfInterest = devicePoint
+                device.exposureMode = .continuousAutoExposure
+            }
+            
+            device.isSubjectAreaChangeMonitoringEnabled = true
+            device.unlockForConfiguration()
+        } catch {
+            print("Could not lock device for configuration: \(error)")
         }
+    }
 }
 
 extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-            
-            frameCount += 1
-            guard frameCount % 20 == 0 else { return }
-            
-            guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-            let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-            
-            let score = calculateBlueScore(from: ciImage)
-            
-            DispatchQueue.main.async {
-                self.onColorScored?(score)
-            }
+        
+        frameCount += 1
+        guard frameCount % 10 == 0 else { return }
+        
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+        
+        let score = calculateBlueScore(from: ciImage)
+        
+        DispatchQueue.main.async {
+            self.onColorScored?(score)
         }
+    }
     
     func calculateBlueScore(from ciImage: CIImage) -> Double {
         let context = CIContext()
@@ -118,12 +141,12 @@ extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
         ) else { return 0 }
         
         renderContext.draw(cgImage, in: targetExtent)
-
+        
         var bluePixelCount: Double = 0
         let totalPixels = width * height
         let targetHue: CGFloat = 220.0
         let maxDistance: CGFloat = 50.0
-
+        
         for i in stride(from: 0, to: totalPixels * 4, by: 4) {
             let r = CGFloat(rawData[i]) / 255.0
             let g = CGFloat(rawData[i+1]) / 255.0
@@ -147,44 +170,44 @@ extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
     }
     
     private func compareToTargetColor(image: CIImage) -> Double {
+        
+        let smallImage = image.transformed(by: CGAffineTransform(scaleX: 0.1, y: 0.1))
+        let context = CIContext()
+        
+        guard let cgImage = context.createCGImage(smallImage, from: smallImage.extent) else { return 0 }
+        
+        let width = cgImage.width
+        let height = cgImage.height
+        let totalPixels = width * height
+        
+        guard let data = cgImage.dataProvider?.data,
+              let ptr = CFDataGetBytePtr(data) else { return 0 }
+        
+        var totalWeightedScore: Double = 0
+        let targetHue: CGFloat = 220.0
+        let maxDistance: CGFloat = 50.0
+        
+        for i in stride(from: 0, to: totalPixels * 4, by: 4) {
+            let r = CGFloat(ptr[i]) / 255.0
+            let g = CGFloat(ptr[i+1]) / 255.0
+            let b = CGFloat(ptr[i+2]) / 255.0
             
-            let smallImage = image.transformed(by: CGAffineTransform(scaleX: 0.1, y: 0.1))
-            let context = CIContext()
+            let color = UIColor(red: r, green: g, blue: b, alpha: 1.0)
+            var h: CGFloat = 0, s: CGFloat = 0, v: CGFloat = 0, a: CGFloat = 0
+            color.getHue(&h, saturation: &s, brightness: &v, alpha: &a)
             
-            guard let cgImage = context.createCGImage(smallImage, from: smallImage.extent) else { return 0 }
+            let hueDegrees = h * 360
+            let diff = abs(hueDegrees - targetHue)
+            let shortestDiff = min(diff, 360 - diff)
             
-            let width = cgImage.width
-            let height = cgImage.height
-            let totalPixels = width * height
-            
-            guard let data = cgImage.dataProvider?.data,
-                  let ptr = CFDataGetBytePtr(data) else { return 0 }
-            
-            var totalWeightedScore: Double = 0
-            let targetHue: CGFloat = 220.0
-            let maxDistance: CGFloat = 50.0
-            
-            for i in stride(from: 0, to: totalPixels * 4, by: 4) {
-                let r = CGFloat(ptr[i]) / 255.0
-                let g = CGFloat(ptr[i+1]) / 255.0
-                let b = CGFloat(ptr[i+2]) / 255.0
-                
-                let color = UIColor(red: r, green: g, blue: b, alpha: 1.0)
-                var h: CGFloat = 0, s: CGFloat = 0, v: CGFloat = 0, a: CGFloat = 0
-                color.getHue(&h, saturation: &s, brightness: &v, alpha: &a)
-                
-                let hueDegrees = h * 360
-                let diff = abs(hueDegrees - targetHue)
-                let shortestDiff = min(diff, 360 - diff)
-                
-                if shortestDiff < maxDistance {
-                    let hueScore = 1.0 - (shortestDiff / maxDistance)
-                    totalWeightedScore += Double(hueScore * s * v)
-                }
+            if shortestDiff < maxDistance {
+                let hueScore = 1.0 - (shortestDiff / maxDistance)
+                totalWeightedScore += Double(hueScore * s * v)
             }
-            
-            return totalWeightedScore / Double(totalPixels)
         }
+        
+        return totalWeightedScore / Double(totalPixels)
+    }
     
     private func mapToSensoryScore(_ raw: Double) -> Double {
         if raw < 0.05 { return 0 }
